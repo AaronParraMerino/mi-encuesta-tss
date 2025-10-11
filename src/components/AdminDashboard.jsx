@@ -17,6 +17,57 @@ const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('');
 
+  // ORDEN EXACTO DE COLUMNAS según Google Forms (CRITICAL)
+  const COLUMN_ORDER = [
+    'Marca temporal',
+    'Puntuación',
+    '¿Qué edad tienes?',
+    'Genero:',
+    'Ciudad/Departamento de residencia:',
+    'Localidad/Provincia de origen.\nEjm: Cliza, Punata, Chapare, etc.',
+    'Tu vivienda donde reside actualmente es:',
+    'Situación Educativa:',
+    '¿Menciona la carrera que estudias o estudiaste?',
+    'Estrato Socioeconómico Percibido:',
+    'Estatus Laboral (Recién profesionalizados - Profesionales Junior)',
+    'Ha votado en elecciones presidenciales previas:',
+    'Si las elecciones fueran mañana, ¿por qué candidato votarías?',
+    '¿Qué tan seguro esta de su elección?',
+    '¿Con qué tendencia política se identifica mas personalmente?',
+    '¿Qué probabilidad crees que tienes para convencer a otra persona de cambiar su voto?',
+    '¿Con qué intensidad se identifica con la ideología del candidato que apoya?',
+    'Relevancia de los temas en su elección\n(1 = Nada Importante) a (5 = Muy Importante) [Economía: Estabilidad, Empleo, Deuda]',
+    'Relevancia de los temas en su elección\n(1 = Nada Importante) a (5 = Muy Importante) [Educación: Calidad universitaria, Acceso a becas]',
+    'Relevancia de los temas en su elección\n(1 = Nada Importante) a (5 = Muy Importante) [Lucha contra la Corrupción y Justicia]',
+    'Relevancia de los temas en su elección\n(1 = Nada Importante) a (5 = Muy Importante) [Acceso a servicios: Salud Publica]',
+    'Relevancia de los temas en su elección\n(1 = Nada Importante) a (5 = Muy Importante) [Seguridad ciudadana:]',
+    'Relevancia de los temas en su elección\n(1 = Nada Importante) a (5 = Muy Importante) [Cambio Climático y Medio Ambiente:]',
+    'Relevancia de los temas en su elección\n(1 = Nada Importante) a (5 = Muy Importante) [Derechos Sociales/Minorías: Temas de género, indigenas]',
+    'Relevancia de los temas en su elección\n(1 = Nada Importante) a (5 = Muy Importante) [Modelo de Desarrollo del País: Estatismo vs. Mercado]',
+    'Relevancia de los temas en su elección\n(1 = Nada Importante) a (5 = Muy Importante) [Migración laboral juvenil]',
+    'Relevancia de los temas en su elección\n(1 = Nada Importante) a (5 = Muy Importante) [Propuestas de innovación y tecnología]',
+    '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a (5 = Totalmente) [Experiencia en gestión ]',
+    '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a (5 = Totalmente) [Honestidad/Transparencia]',
+    '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a (5 = Totalmente) [Capacidad de unir a la población]',
+    '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a (5 = Totalmente) [Liderazgo fuerte/Decisivo]',
+    '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a (5 = Totalmente) [Propuestas claras y realistas]',
+    '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a (5 = Totalmente) [Experiencia en gestión ]',
+    '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a (5 = Totalmente) [Honestidad/Transparencia]',
+    '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a (5 = Totalmente) [Capacidad de unir a la población]',
+    '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a (5 = Totalmente) [Liderazgo fuerte/Decisivo]',
+    '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a (5 = Totalmente) [Propuestas claras y realistas]',
+    '¿Cuáles son las redes sociales por el cual recibe información de política?',
+    '¿Cuáles son los medios comunicación por el cual recibe información de política?',
+    '¿Cuáles son los medios de vinculo social por el cual recibe información de política?',
+    '¿Con qué frecuencia interactúa con contenidos políticos en redes sociales?',
+    '¿A quién considera más influyente en su decisión política?',
+    'Nivel de confianza en encuestas publicadas en medios digitales',
+    'Percepción de estabilidad política futura tras la segunda vuelta',
+    'Expectativa personal sobre mejora del País si GANA Rodrigo Paz Pereira',
+    'Expectativa personal sobre mejora del País si GANA Jorge Quiroga Ramírez',
+    'Dirección de correo electrónico'
+  ];
+
   useEffect(() => {
     loadStats();
   }, []);
@@ -85,13 +136,24 @@ const AdminDashboard = () => {
         return;
       }
 
-      // Preparar datos para exportación (sin el campo 'id' de Firestore)
+      // CRITICAL: Reordenar datos según COLUMN_ORDER exacto
       const dataToExport = allSurveyData.map(item => {
-        const { id, timestamp, ...rest } = item;
-        return rest;
+        const orderedRow = {};
+        
+        // Recorrer columnas en orden y asignar valores
+        COLUMN_ORDER.forEach(column => {
+          // Si la columna existe en el item, usar su valor, sino dejar vacío
+          orderedRow[column] = item[column] !== undefined ? item[column] : '';
+        });
+        
+        return orderedRow;
       });
 
-      const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+      // Crear worksheet con el orden de columnas preservado
+      const worksheet = XLSX.utils.json_to_sheet(dataToExport, {
+        header: COLUMN_ORDER // Forzar el orden de las columnas
+      });
+
       const workbook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workbook, worksheet, 'Encuestas Bolivia 2025');
 
@@ -124,7 +186,12 @@ const AdminDashboard = () => {
           const data = new Uint8Array(event.target.result);
           const workbook = XLSX.read(data, { type: 'array' });
           const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-          const jsonData = XLSX.utils.sheet_to_json(firstSheet);
+          
+          // Leer con el orden de las columnas
+          const jsonData = XLSX.utils.sheet_to_json(firstSheet, {
+            raw: false, // Mantener formato de texto
+            defval: '' // Valor por defecto para celdas vacías
+          });
 
           let imported = 0;
           let errors = 0;
@@ -133,7 +200,13 @@ const AdminDashboard = () => {
             try {
               // Validar que tenga datos mínimos
               if (row['¿Qué edad tienes?'] && row['Genero:']) {
-                await addDoc(collection(db, 'encuestas'), row);
+                // Asegurar que todas las columnas existan en el orden correcto
+                const orderedRow = {};
+                COLUMN_ORDER.forEach(column => {
+                  orderedRow[column] = row[column] !== undefined ? row[column] : '';
+                });
+                
+                await addDoc(collection(db, 'encuestas'), orderedRow);
                 imported++;
               } else {
                 errors++;
@@ -172,7 +245,16 @@ const AdminDashboard = () => {
       return;
     }
 
-    const jsonString = JSON.stringify(allSurveyData, null, 2);
+    // Reordenar JSON también
+    const orderedData = allSurveyData.map(item => {
+      const orderedRow = {};
+      COLUMN_ORDER.forEach(column => {
+        orderedRow[column] = item[column] !== undefined ? item[column] : '';
+      });
+      return orderedRow;
+    });
+
+    const jsonString = JSON.stringify(orderedData, null, 2);
     const blob = new Blob([jsonString], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
 
@@ -267,10 +349,10 @@ const AdminDashboard = () => {
     <div className="space-y-6">
       {/* Header del Dashboard */}
       <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-xl shadow-2xl p-6">
-        <h1 className="text-3xl font-extrabold text-dark mb-2 drop-shadow-lg">
-           Panel de Administración
+        <h1 className="text-3xl font-extrabold text-white mb-2 drop-shadow-lg">
+          Panel de Administración
         </h1>
-        <p className="text-lg text-dark font-medium drop-shadow">
+        <p className="text-lg text-white font-medium drop-shadow">
           Estadísticas consolidadas con análisis en tiempo real
         </p>
       </div>
@@ -340,7 +422,7 @@ const AdminDashboard = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {renderStatCard('Total Respuestas', stats.total, Users, '#6366f1', '#6366f1')}
         {renderStatCard('Rangos de Edad', Object.keys(stats.porEdad).length, BarChart3, '#10b981', '#10b981')}
-        {renderStatCard('Candidatos', Object.keys(stats.porCandidato).length, PieChart, '#ef4444', '#ef4444')}
+        {renderStatCard('Candidatos', 2, PieChart, '#ef4444', '#ef4444')}
         {renderStatCard('Departamentos', Object.keys(stats.porDepartamento).length, TrendingUp, '#f59e0b', '#f59e0b')}
       </div>
 

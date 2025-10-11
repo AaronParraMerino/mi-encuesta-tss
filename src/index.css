@@ -1,8 +1,9 @@
-/* 
- * Archivo CSS Principal (index.css)
+/* * Archivo CSS Principal (index.css)
  * Estilos base y personalizados para la encuesta
  */
-
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 /* --- Reseteo Base --- */
 * {
   margin: 0;
@@ -11,13 +12,14 @@
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  /* Usamos Inter, pero con una fuente de respaldo moderna */
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f8fafc;
-  color: #1e293b;
+  background-color: #f8fafc; /* Tailwind bg-gray-50 */
+  color: #1e293b; /* Tailwind text-slate-800 */
 }
 
 #root {
@@ -226,4 +228,13 @@ button:disabled {
 
 .drop-shadow-lg {
   filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.1));
+}
+/* --- Borde con degradado personalizado --- */
+.gradient-border {
+  border-left: 4px solid;
+  border-radius: 0.5rem;
+  border-image: linear-gradient(to bottom, #8B5CF6, #EC4899) 1;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }

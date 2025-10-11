@@ -6,8 +6,8 @@ import { db } from '../config/firebaseConfig';
 const SurveyForm = () => {
   // Estado con NOMBRES EXACTOS de las columnas de Google Forms
   const [formData, setFormData] = useState({
-    // Columna 1: Marca temporal (se genera automáticamente)
-    // Columna 2: Puntuación (no aplica en nuestro caso)
+    'Marca temporal': '',
+    'Puntuación': '',
     '¿Qué edad tienes?': '',
     'Genero:': '',
     'Ciudad/Departamento de residencia:': '',
@@ -23,7 +23,7 @@ const SurveyForm = () => {
     '¿Con qué tendencia política se identifica mas personalmente?': '',
     '¿Qué probabilidad crees que tienes para convencer a otra persona de cambiar su voto?': '',
     '¿Con qué intensidad se identifica con la ideología del candidato que apoya?': '',
-    // Relevancia de temas
+    // Relevancia - Cada tema en su propia columna
     'Relevancia de los temas en su elección\n(1 = Nada Importante) a (5 = Muy Importante) [Economía: Estabilidad, Empleo, Deuda]': '',
     'Relevancia de los temas en su elección\n(1 = Nada Importante) a (5 = Muy Importante) [Educación: Calidad universitaria, Acceso a becas]': '',
     'Relevancia de los temas en su elección\n(1 = Nada Importante) a (5 = Muy Importante) [Lucha contra la Corrupción y Justicia]': '',
@@ -34,13 +34,13 @@ const SurveyForm = () => {
     'Relevancia de los temas en su elección\n(1 = Nada Importante) a (5 = Muy Importante) [Modelo de Desarrollo del País: Estatismo vs. Mercado]': '',
     'Relevancia de los temas en su elección\n(1 = Nada Importante) a (5 = Muy Importante) [Migración laboral juvenil]': '',
     'Relevancia de los temas en su elección\n(1 = Nada Importante) a (5 = Muy Importante) [Propuestas de innovación y tecnología]': '',
-    // Atributos Rodrigo Paz Pereira
+    // Atributos Paz Pereira - Cada atributo en su propia columna
     '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a (5 = Totalmente) [Experiencia en gestión ]': '',
     '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a (5 = Totalmente) [Honestidad/Transparencia]': '',
     '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a (5 = Totalmente) [Capacidad de unir a la población]': '',
     '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a (5 = Totalmente) [Liderazgo fuerte/Decisivo]': '',
     '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a (5 = Totalmente) [Propuestas claras y realistas]': '',
-    // Atributos Jorge Quiroga
+    // Atributos Quiroga - Cada atributo en su propia columna
     '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a (5 = Totalmente) [Experiencia en gestión ]': '',
     '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a (5 = Totalmente) [Honestidad/Transparencia]': '',
     '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a (5 = Totalmente) [Capacidad de unir a la población]': '',
@@ -56,7 +56,7 @@ const SurveyForm = () => {
     'Percepción de estabilidad política futura tras la segunda vuelta': '',
     'Expectativa personal sobre mejora del País si GANA Rodrigo Paz Pereira': '',
     'Expectativa personal sobre mejora del País si GANA Jorge Quiroga Ramírez': '',
-    // La columna de email no la incluimos para mantener anonimato
+    'Dirección de correo electrónico': ''
   });
 
   const [loading, setLoading] = useState(false);
@@ -94,23 +94,85 @@ const SurveyForm = () => {
     setSubmissionStatus(null);
 
     try {
-      // Agregar marca temporal y puntuación
-      const dataToSend = {
-        'Marca temporal': new Date().toLocaleString('es-BO', { 
-          timeZone: 'America/La_Paz',
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit'
-        }),
-        'Puntuación': '', // Vacío como en Google Forms
-        ...formData,
-        timestamp: serverTimestamp() // Para ordenamiento en Firebase
-      };
+      // ORDEN EXACTO de columnas según Google Forms (CRITICAL para Python)
+      const COLUMN_ORDER = [
+        'Marca temporal',
+        'Puntuación',
+        '¿Qué edad tienes?',
+        'Genero:',
+        'Ciudad/Departamento de residencia:',
+        'Localidad/Provincia de origen.\nEjm: Cliza, Punata, Chapare, etc.',
+        'Tu vivienda donde reside actualmente es:',
+        'Situación Educativa:',
+        '¿Menciona la carrera que estudias o estudiaste?',
+        'Estrato Socioeconómico Percibido:',
+        'Estatus Laboral (Recién profesionalizados - Profesionales Junior)',
+        'Ha votado en elecciones presidenciales previas:',
+        'Si las elecciones fueran mañana, ¿por qué candidato votarías?',
+        '¿Qué tan seguro esta de su elección?',
+        '¿Con qué tendencia política se identifica mas personalmente?',
+        '¿Qué probabilidad crees que tienes para convencer a otra persona de cambiar su voto?',
+        '¿Con qué intensidad se identifica con la ideología del candidato que apoya?',
+        'Relevancia de los temas en su elección\n(1 = Nada Importante) a (5 = Muy Importante) [Economía: Estabilidad, Empleo, Deuda]',
+        'Relevancia de los temas en su elección\n(1 = Nada Importante) a (5 = Muy Importante) [Educación: Calidad universitaria, Acceso a becas]',
+        'Relevancia de los temas en su elección\n(1 = Nada Importante) a (5 = Muy Importante) [Lucha contra la Corrupción y Justicia]',
+        'Relevancia de los temas en su elección\n(1 = Nada Importante) a (5 = Muy Importante) [Acceso a servicios: Salud Publica]',
+        'Relevancia de los temas en su elección\n(1 = Nada Importante) a (5 = Muy Importante) [Seguridad ciudadana:]',
+        'Relevancia de los temas en su elección\n(1 = Nada Importante) a (5 = Muy Importante) [Cambio Climático y Medio Ambiente:]',
+        'Relevancia de los temas en su elección\n(1 = Nada Importante) a (5 = Muy Importante) [Derechos Sociales/Minorías: Temas de género, indigenas]',
+        'Relevancia de los temas en su elección\n(1 = Nada Importante) a (5 = Muy Importante) [Modelo de Desarrollo del País: Estatismo vs. Mercado]',
+        'Relevancia de los temas en su elección\n(1 = Nada Importante) a (5 = Muy Importante) [Migración laboral juvenil]',
+        'Relevancia de los temas en su elección\n(1 = Nada Importante) a (5 = Muy Importante) [Propuestas de innovación y tecnología]',
+        '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a (5 = Totalmente) [Experiencia en gestión ]',
+        '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a (5 = Totalmente) [Honestidad/Transparencia]',
+        '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a (5 = Totalmente) [Capacidad de unir a la población]',
+        '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a (5 = Totalmente) [Liderazgo fuerte/Decisivo]',
+        '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a (5 = Totalmente) [Propuestas claras y realistas]',
+        '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a (5 = Totalmente) [Experiencia en gestión ]',
+        '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a (5 = Totalmente) [Honestidad/Transparencia]',
+        '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a (5 = Totalmente) [Capacidad de unir a la población]',
+        '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a (5 = Totalmente) [Liderazgo fuerte/Decisivo]',
+        '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a (5 = Totalmente) [Propuestas claras y realistas]',
+        '¿Cuáles son las redes sociales por el cual recibe información de política?',
+        '¿Cuáles son los medios comunicación por el cual recibe información de política?',
+        '¿Cuáles son los medios de vinculo social por el cual recibe información de política?',
+        '¿Con qué frecuencia interactúa con contenidos políticos en redes sociales?',
+        '¿A quién considera más influyente en su decisión política?',
+        'Nivel de confianza en encuestas publicadas en medios digitales',
+        'Expectativa personal sobre mejora del País si GANA Rodrigo Paz Pereira',
+        'Expectativa personal sobre mejora del País si GANA Jorge Quiroga Ramírez',
+        'Dirección de correo electrónico'
+      ];
 
-      await addDoc(collection(db, 'encuestas'), dataToSend);
+      // Crear objeto ordenado según COLUMN_ORDER
+      const orderedData = {};
+      
+      // Agregar Marca temporal y Puntuación primero
+      orderedData['Marca temporal'] = new Date().toLocaleString('es-BO', { 
+        timeZone: 'America/La_Paz',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      });
+      orderedData['Puntuación'] = ''; // Vacío como en Google Forms
+      
+      // Recorrer el orden de columnas y asignar valores desde formData
+      COLUMN_ORDER.forEach(column => {
+        if (column !== 'Marca temporal' && column !== 'Puntuación' && column !== 'timestamp') {
+          // CRITICAL: Asegurar que TODAS las columnas tengan un valor (aunque sea vacío)
+          orderedData[column] = formData[column] !== undefined && formData[column] !== null && formData[column] !== '' 
+            ? formData[column] 
+            : ''; // Siempre string vacío, nunca undefined
+        }
+      });
+
+      // Agregar timestamp de Firebase para ordenamiento interno (no se exporta)
+      orderedData['timestamp'] = serverTimestamp();
+
+      await addDoc(collection(db, 'encuestas'), orderedData);
       
       setSubmissionStatus('success');
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -304,15 +366,14 @@ const SurveyForm = () => {
   );
 
   return (
-    <div className="bg-white rounded-xl shadow-xl p-4 p-md-5">
-      <form onSubmit={handleSubmit}>
-        
+    <form onSubmit={handleSubmit}>
+    <div className="space-y-6">
         {/* Header */}
-        <div className="mb-5 pb-4 border-bottom">
-          <h1 className="display-6 fw-bold text-primary mb-2">
-            📋 Encuesta de Percepción Política
+        <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-xl shadow-2xl p-6">
+          <h1 className="text-3xl font-extrabold text-white mb-2 drop-shadow-lg">
+            Encuesta de Percepción Política
           </h1>
-          <p className="lead text-secondary">
+          <p className="text-lg text-white font-medium drop-shadow">
             Análisis de la intención de voto y factores influyentes en el segmento juvenil.
           </p>
         </div>
@@ -333,32 +394,32 @@ const SurveyForm = () => {
         )}
 
         {/* SECCIÓN 1: Datos Demográficos */}
-        <div className="card shadow-lg mb-5 p-4 border-start border-4 border-info rounded-3">
+        <div className="card shadow-lg mb-5 p-4 rounded-3 gradient-border">
           <h2 className="h4 text-dark border-bottom pb-3 mb-4 fw-bold">
             1. Datos Demográficos y Socioeconómicos
           </h2>
           
           {renderRadioGroup('¿Qué edad tienes?', '¿Qué edad tienes?', ['18 a 24', '25 a 30', '30 a 45', '46 en adelante'])}
           
-          {renderRadioGroup('Genero:', 'Género', ['Masculino', 'Femenino', 'Prefiero no decirlo', 'No Binario'])}
+          {renderSelect('Genero:', 'Género', ['Masculino', 'Femenino', 'Prefiero no decirlo', 'No Binario'])}
           
-          {renderRadioGroup('Ciudad/Departamento de residencia:', 'Ciudad/Departamento de residencia', [
+          {renderSelect('Ciudad/Departamento de residencia:', 'Ciudad/Departamento de residencia', [
             'La Paz', 'Santa Cruz', 'Cochabamba', 'Chuquisaca', 'Tarija', 'Pando', 'Beni', 'Potosi', 'Oruro'
           ])}
 
           {renderTextInput('Localidad/Provincia de origen.\nEjm: Cliza, Punata, Chapare, etc.', 'Localidad/Provincia de origen', 'Ej: Cliza, Punata, Chapare')}
           
-          {renderRadioGroup('Tu vivienda donde reside actualmente es:', 'Tu vivienda donde reside actualmente es', [
+          {renderSelect('Tu vivienda donde reside actualmente es:', 'Tu vivienda donde reside actualmente es', [
             'Alquiler', 'Anticrético', 'Propia', 'Familiar'
           ])}
           
-          {renderRadioGroup('Situación Educativa:', 'Situación Educativa', [
+          {renderSelect('Situación Educativa:', 'Situación Educativa', [
             'Estudiante Universitario', 'Recién Profesionalizado'
           ])}
 
           {renderTextInput('¿Menciona la carrera que estudias o estudiaste?', '¿Menciona la carrera que estudias o estudiaste?', 'Ej: Ingeniería de Sistemas')}
           
-          {renderRadioGroup('Estrato Socioeconómico Percibido:', 'Estrato Socioeconómico Percibido', [
+          {renderSelect('Estrato Socioeconómico Percibido:', 'Estrato Socioeconómico Percibido', [
             'Bajo (Luchando para cubrir necesidades básicas)',
             'Medio-Bajo (Cubriendo necesidades, pocos ahorros)',
             'Medio (Vida cómoda, capacidad de ahorro)',
@@ -366,7 +427,7 @@ const SurveyForm = () => {
             'Alto (Ingresos altos)'
           ])}
           
-          {renderRadioGroup('Estatus Laboral (Recién profesionalizados - Profesionales Junior)', 'Estatus Laboral', [
+          {renderSelect('Estatus Laboral (Recién profesionalizados - Profesionales Junior)', 'Estatus Laboral', [
             'Empleado Institución Pública',
             'Empleado Empresa Privada',
             'Desempleado',
@@ -375,18 +436,18 @@ const SurveyForm = () => {
             'Innovador'
           ])}
           
-          {renderRadioGroup('Ha votado en elecciones presidenciales previas:', 'Ha votado en elecciones presidenciales previas', [
+          {renderSelect('Ha votado en elecciones presidenciales previas:', 'Ha votado en elecciones presidenciales previas', [
             'Si', 'No', 'No recuerdo'
           ])}
         </div>
 
         {/* SECCIÓN 2: Intención de Voto */}
-        <div className="card shadow-lg mb-5 p-4 border-start border-4 border-info rounded-3">
+        <div className="card shadow-lg mb-5 p-4 rounded-3 gradient-border">
           <h2 className="h4 text-dark border-bottom pb-3 mb-4 fw-bold">
             2. Intención de Voto
           </h2>
           
-          {renderRadioGroup('Si las elecciones fueran mañana, ¿por qué candidato votarías?', 'Si las elecciones fueran mañana, ¿por qué candidato votarías?', [
+          {renderSelect('Si las elecciones fueran mañana, ¿por qué candidato votarías?', 'Si las elecciones fueran mañana, ¿por qué candidato votarías?', [
             'Candidato Rodrigo Paz Pereira (Izquierda)',
             'Candidato Jorge Quiroga Ramirez (Derecha)',
             'Voto Blanco',
@@ -396,7 +457,7 @@ const SurveyForm = () => {
 
           {renderScale('¿Qué tan seguro esta de su elección?', '¿Qué tan seguro está de su elección?', '1 = Poco seguro', '5 = Muy seguro')}
 
-          {renderRadioGroup('¿Con qué tendencia política se identifica mas personalmente?', '¿Con qué tendencia política se identifica más personalmente?', [
+          {renderSelect('¿Con qué tendencia política se identifica mas personalmente?', '¿Con qué tendencia política se identifica más personalmente?', [
             'Izquierda/Progresista',
             'Centro-Izquierda',
             'Centro',
@@ -410,7 +471,7 @@ const SurveyForm = () => {
         </div>
 
         {/* SECCIÓN 3: Relevancia de Temas */}
-        <div className="card shadow-lg mb-5 p-4 border-start border-4 border-info rounded-3">
+        <div className="card shadow-lg mb-5 p-4 rounded-3 gradient-border">
           <h2 className="h4 text-dark border-bottom pb-3 mb-4 fw-bold">
             3. Relevancia de los temas en su elección
           </h2>
@@ -433,7 +494,7 @@ const SurveyForm = () => {
         </div>
 
         {/* SECCIÓN 4: Percepción de Candidatos */}
-        <div className="card shadow-lg mb-5 p-4 border-start border-4 border-info rounded-3">
+        <div className="card shadow-lg mb-5 p-4 rounded-3 gradient-border">
           <h2 className="h4 text-dark border-bottom pb-3 mb-4 fw-bold">
             4. Percepción de Candidatos y Atributos
           </h2>
@@ -463,7 +524,7 @@ const SurveyForm = () => {
         </div>
 
         {/* SECCIÓN 5: Fuentes de Información */}
-        <div className="card shadow-lg mb-5 p-4 border-start border-4 border-info rounded-3">
+        <div className="card shadow-lg mb-5 p-4 rounded-3 gradient-border">
           <h2 className="h4 text-dark border-bottom pb-3 mb-4 fw-bold">
             5. Fuentes de Información Política
           </h2>
@@ -480,11 +541,11 @@ const SurveyForm = () => {
             ['Familiares', 'Amigos', 'Conocidos en el trabajo']
           )}
 
-          {renderRadioGroup('¿Con qué frecuencia interactúa con contenidos políticos en redes sociales?', '¿Con qué frecuencia interactúa con contenidos políticos en redes sociales?', [
+          {renderSelect('¿Con qué frecuencia interactúa con contenidos políticos en redes sociales?', '¿Con qué frecuencia interactúa con contenidos políticos en redes sociales?', [
             'Diario', 'Semanal', 'Ocasional', 'Nunca'
           ])}
 
-          {renderCheckboxGroup('¿A quién considera más influyente en su decisión política?', '¿A quién considera más influyente en su decisión política?', [
+          {renderSelect('¿A quién considera más influyente en su decisión política?', '¿A quién considera más influyente en su decisión política?', [
             'Familia', 'Amigos', 'Redes sociales', 'Medios de comunicación tradicional'
           ])}
 
@@ -492,7 +553,7 @@ const SurveyForm = () => {
         </div>
 
         {/* SECCIÓN 6: Expectativas */}
-        <div className="card shadow-lg mb-5 p-4 border-start border-4 border-info rounded-3">
+        <div className="card shadow-lg mb-5 p-4 rounded-3 gradient-border">
           <h2 className="h4 text-dark border-bottom pb-3 mb-4 fw-bold">
             6. Expectativas Post-Elección
           </h2>
@@ -521,12 +582,12 @@ const SurveyForm = () => {
             )}
           </button>
         </div>
-      </form>
-      
+          
       <footer className="text-center text-muted small mt-4">
         <p className="mb-0">* Campos obligatorios. Desarrollado para análisis de percepción política.</p>
-      </footer>
+      </footer>  
     </div>
+    </form>  
   );
 };
 

@@ -8,46 +8,44 @@ function App() {
   const [activeTab, setActiveTab] = useState('encuesta'); // 'encuesta' o 'dashboard'
 
   return (
+    
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
       {/* Header Principal */}
-      <div className="bg-gradient-to-r from-indigo-700 via-purple-700 to-pink-700 shadow-2xl">
-        <div className="max-w-7xl mx-auto px-4 py-6">
-          <h1 className="text-3xl font-bold text-dark drop-shadow-lg">
+      <header className="bg-gradient-to-r from-indigo-700 via-purple-700 to-pink-700 shadow-2xl">
+        <div className="max-w-6xl mx-auto flex flex-col items-center justify-center text-center px-6 py-8">
+          <h1 className="text-4xl md:text-5xl font-extrabold text-white drop-shadow-lg tracking-tight">
             Encuesta Segunda Vuelta Bolivia 2025
           </h1>
-          <p className="text-dark mt-1 font-medium drop-shadow">
+          <p className="text-indigo-100 mt-2 text-lg font-medium">
             Sistema de encuestas con análisis en tiempo real
           </p>
-        </div>
-      </div>
 
-      {/* Navegación por pestañas */}
-      <div className="bg-white shadow-md">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex gap-1">
+          {/* Navegación */}
+          <div className="mt-6 flex flex-wrap justify-center gap-4">
             <button
               onClick={() => setActiveTab('encuesta')}
-              className={`px-6 py-3 font-semibold transition-all ${
+              className={`px-6 py-3 rounded-full text-sm md:text-base font-semibold shadow-md transition-all duration-300 ${
                 activeTab === 'encuesta'
-                  ? 'border-b-4 border-indigo-600 text-indigo-700 bg-indigo-50'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                  ? 'bg-white text-indigo-700 scale-105 shadow-lg'
+                  : 'bg-indigo-500 text-white hover:bg-indigo-400 hover:scale-105'
               }`}
             >
-               Responder Encuesta
+              Responder Encuesta
             </button>
+
             <button
               onClick={() => setActiveTab('dashboard')}
-              className={`px-6 py-3 font-semibold transition-all ${
+              className={`px-6 py-3 rounded-full text-sm md:text-base font-semibold shadow-md transition-all duration-300 ${
                 activeTab === 'dashboard'
-                  ? 'border-b-4 border-indigo-600 text-indigo-700 bg-indigo-50'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                  ? 'bg-white text-indigo-700 scale-105 shadow-lg'
+                  : 'bg-indigo-500 text-white hover:bg-indigo-400 hover:scale-105'
               }`}
             >
-               Panel de Administración
+              Panel de Administración
             </button>
           </div>
         </div>
-      </div>
+      </header>
 
       {/* Contenido dinámico */}
       <div className="max-w-7xl mx-auto px-4 py-8">
