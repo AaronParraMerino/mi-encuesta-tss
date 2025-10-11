@@ -16,3 +16,5 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 // Exporta la instancia de Firestore que usaremos para guardar los datos
 export const db = getFirestore(app);
+
+export const firebaseApp = app; 
