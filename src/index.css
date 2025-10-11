@@ -1,7 +1,9 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* 
+ * Archivo CSS Principal (index.css)
+ * Estilos base y personalizados para la encuesta
+ */
 
+/* --- Reseteo Base --- */
 * {
   margin: 0;
   padding: 0;
@@ -9,64 +11,135 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f3e5f5;
+  background-color: #f8fafc;
+  color: #1e293b;
 }
 
 #root {
   min-height: 100vh;
 }
 
-/* Estilos para inputs de tipo range */
+/* --- Estilos para Input Range (Slider) --- */
+
 input[type="range"] {
   -webkit-appearance: none;
   width: 100%;
-  height: 6px;
-  border-radius: 5px;
-  background: #e5e7eb;
+  height: 10px;
+  border-radius: 9999px;
+  background: linear-gradient(to right, #e0e7ff 0%, #e0e7ff 100%);
   outline: none;
+  margin: 12px 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
+/* Hover effect en el track */
+input[type="range"]:hover {
+  background: linear-gradient(to right, #c7d2fe 0%, #c7d2fe 100%);
+}
+
+/* Track completado - Firefox */
+input[type="range"]::-moz-range-progress {
+  background: linear-gradient(to right, #6366f1, #4f46e5);
+  border-radius: 9999px;
+  height: 10px;
+}
+
+/* Thumb - Chrome/Safari/Edge */
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 20px;
-  height: 20px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
-  background: #673AB7;
-  cursor: pointer;
-  transition: all 0.2s;
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  box-shadow: 0 3px 6px rgba(79, 70, 229, 0.4);
+  cursor: grab;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  border: 3px solid white;
 }
 
-input[type="range"]::-webkit-slider-thumb:hover {
-  background: #5e35b1;
-  transform: scale(1.1);
-}
-
+/* Thumb - Firefox */
 input[type="range"]::-moz-range-thumb {
-  width: 20px;
-  height: 20px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
-  background: #673AB7;
-  cursor: pointer;
-  border: none;
-  transition: all 0.2s;
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  box-shadow: 0 3px 6px rgba(79, 70, 229, 0.4);
+  cursor: grab;
+  border: 3px solid white;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
+/* Hover/Active en Thumb - Chrome/Safari/Edge */
+input[type="range"]::-webkit-slider-thumb:hover {
+  background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);
+  transform: scale(1.2);
+  box-shadow: 0 5px 12px rgba(79, 70, 229, 0.5);
+}
+
+input[type="range"]::-webkit-slider-thumb:active {
+  background: linear-gradient(135deg, #3730a3 0%, #312e81 100%);
+  transform: scale(1.15);
+  cursor: grabbing;
+  box-shadow: 0 3px 8px rgba(79, 70, 229, 0.6);
+}
+
+/* Hover/Active en Thumb - Firefox */
 input[type="range"]::-moz-range-thumb:hover {
-  background: #5e35b1;
-  transform: scale(1.1);
+  background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);
+  transform: scale(1.2);
+  box-shadow: 0 5px 12px rgba(79, 70, 229, 0.5);
 }
 
-/* Animaciones */
+input[type="range"]::-moz-range-thumb:active {
+  background: linear-gradient(135deg, #3730a3 0%, #312e81 100%);
+  transform: scale(1.15);
+  cursor: grabbing;
+  box-shadow: 0 3px 8px rgba(79, 70, 229, 0.6);
+}
+
+/* Compatibilidad con Edge y IE */
+input[type=range]::-ms-thumb {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  box-shadow: 0 3px 6px rgba(79, 70, 229, 0.4);
+  cursor: grab;
+  border: 3px solid white;
+}
+
+input[type=range]::-ms-track {
+  width: 100%;
+  height: 10px;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+  cursor: pointer;
+}
+
+input[type=range]::-ms-fill-lower {
+  background: linear-gradient(to right, #6366f1, #4f46e5);
+  border-radius: 9999px;
+}
+
+input[type=range]::-ms-fill-upper {
+  background: #e0e7ff;
+  border-radius: 9999px;
+}
+
+/* --- Animaciones útiles --- */
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(-10px);
   }
   to {
     opacity: 1;
@@ -74,6 +147,83 @@ input[type="range"]::-moz-range-thumb:hover {
   }
 }
 
-.animate-fade-in {
-  animation: fadeIn 0.3s ease-in;
+.fade-in {
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.slide-in {
+  animation: slideIn 0.5s ease-out;
+}
+
+/* --- Mejoras para inputs y selects --- */
+input[type="text"],
+input[type="email"],
+input[type="number"],
+select,
+textarea {
+  transition: all 0.2s ease;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="number"]:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+/* --- Mejoras para botones --- */
+button {
+  transition: all 0.2s ease;
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* --- Scrollbar personalizado --- */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #6366f1, #4f46e5);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #4f46e5, #3730a3);
+}
+
+/* --- Utilidades adicionales --- */
+.text-shadow {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.drop-shadow-lg {
+  filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.1));
 }
