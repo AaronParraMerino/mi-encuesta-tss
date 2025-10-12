@@ -205,24 +205,37 @@ const AdminDashboard = () => {
             defval: '' // Valor por defecto para celdas vacías
           });
 
-          // DEBUG: Ver qué columnas vienen del Excel
+          // *** DEBUG MEJORADO: Ver TODAS las columnas del Excel ***
           if (jsonData.length > 0) {
-            console.log('=== COLUMNAS DEL EXCEL ===');
-            Object.keys(jsonData[0]).forEach(col => {
-              if (col.includes('Rodrigo') || col.includes('Quiroga')) {
-                console.log('Columna encontrada:', col);
-              }
+            console.log('=== TODAS LAS COLUMNAS DEL EXCEL ===');
+            const excelColumns = Object.keys(jsonData[0]);
+            excelColumns.forEach((col, index) => {
+              console.log(`${index + 1}. "${col}"`);
+            });
+            
+            // Verificar columnas críticas
+            console.log('=== COLUMNAS CRÍTICAS ===');
+            const criticalColumns = ['¿Qué edad tienes?', 'Genero:', 'Situación Educativa:', 'Estatus Laboral (Recién profesionalizados - Profesionales Junior)'];
+            criticalColumns.forEach(criticalCol => {
+              const exists = excelColumns.includes(criticalCol);
+              console.log(`"${criticalCol}": ${exists ? 'EXISTE' : 'NO EXISTE'}`);
             });
           }
 
           let imported = 0;
           let errors = 0;
 
-          for (const row of jsonData) {
+          for (const [index, row] of jsonData.entries()) {
             try {
+              // *** DEBUG: Ver datos de cada fila ***
+              console.log(`Procesando fila ${index + 1}:`, {
+                edad: row['¿Qué edad tienes?'],
+                genero: row['Genero:'],
+                tieneDatosMinimos: !!(row['¿Qué edad tienes?'] && row['Genero:'])
+              });
+
               // Validar que tenga datos mínimos
               if (row['¿Qué edad tienes?'] && row['Genero:']) {
-                // *** CAMBIO CRÍTICO: Mapeo inteligente de columnas ***
                 const orderedRow = {};
                 
                 COLUMN_ORDER.forEach(column => {
@@ -230,7 +243,7 @@ const AdminDashboard = () => {
                   if (row[column] !== undefined) {
                     orderedRow[column] = row[column];
                   } else {
-                    // Si no encuentra exacto, buscar columnas similares para atributos de candidatos
+                    // Si no encuentra exacto, buscar columnas similares
                     const matchingColumn = findMatchingCandidateColumn(row, column);
                     orderedRow[column] = matchingColumn ? row[matchingColumn] : '';
                   }
@@ -238,24 +251,28 @@ const AdminDashboard = () => {
                 
                 await addDoc(collection(db, 'encuestas'), orderedRow);
                 imported++;
+                console.log(`Fila ${index + 1} importada correctamente`);
               } else {
                 errors++;
-                console.log('Fila sin datos mínimos:', row);
+                console.log(`Fila ${index + 1} sin datos mínimos:`, {
+                  edad: row['¿Qué edad tienes?'],
+                  genero: row['Genero:']
+                });
               }
             } catch (err) {
-              console.error('Error en fila:', err, row);
+              console.error(`Error en fila ${index + 1}:`, err, row);
               errors++;
             }
           }
 
-          setMessage(` ${imported} respuestas importadas correctamente${errors > 0 ? `. ${errors} filas con errores.` : '.'}`);
+          setMessage(`${imported} respuestas importadas correctamente${errors > 0 ? `. ${errors} filas con errores.` : '.'}`);
           await loadStats();
 
           setTimeout(() => setMessage(''), 5000);
 
         } catch (error) {
           console.error('Error al procesar el archivo:', error);
-          setMessage('ERROR al procesar el archivo Excel. Verifica el formato.');
+          setMessage('Error al procesar el archivo Excel. Verifica el formato.');
         }
       };
 
@@ -263,42 +280,111 @@ const AdminDashboard = () => {
 
     } catch (error) {
       console.error('Error al importar:', error);
-      setMessage('ERROR al importar los datos.');
+      setMessage('Error al importar los datos.');
     } finally {
       setLoading(false);
       e.target.value = '';
     }
   };
 
-  // *** NUEVA FUNCIÓN AUXILIAR: Encontrar columnas de candidatos que coincidan ***
+  // *** FUNCIÓN AUXILIAR MEJORADA: Encontrar columnas que coincidan ***
   const findMatchingCandidateColumn = (row, targetColumn) => {
     const rowColumns = Object.keys(row);
     
-    // Si es una columna de atributos de candidatos
+    // 1. Primero buscar coincidencia EXACTA
+    if (rowColumns.includes(targetColumn)) {
+      return targetColumn;
+    }
+    
+    // 2. Normalizar nombres para comparación flexible
+    const normalizeForComparison = (text) => {
+      return text
+        .toLowerCase()
+        .replace(/\n/g, ' ') // Reemplazar saltos de línea por espacios
+        .replace(/\s+/g, ' ') // Normalizar espacios múltiples
+        .trim();
+    };
+    
+    const normalizedTarget = normalizeForComparison(targetColumn);
+    
+    // 3. Buscar coincidencia exacta normalizada
+    const exactNormalizedMatch = rowColumns.find(col => 
+      normalizeForComparison(col) === normalizedTarget
+    );
+    if (exactNormalizedMatch) {
+      console.log(`✅ Coincidencia exacta normalizada: "${targetColumn}" → "${exactNormalizedMatch}"`);
+      return exactNormalizedMatch;
+    }
+    
+    // 4. Para columnas de candidatos - búsqueda por componentes
     if (targetColumn.includes('Rodrigo Paz Pereira') || targetColumn.includes('Jorge Quiroga Ramírez')) {
-      // Extraer el atributo específico (lo que está entre corchetes)
+      // Extraer componentes clave
       const attributeMatch = targetColumn.match(/\[([^\]]+)\]/);
       const attribute = attributeMatch ? attributeMatch[1].trim() : '';
+      const candidate = targetColumn.includes('Rodrigo') ? 'Rodrigo Paz Pereira' : 'Jorge Quiroga Ramírez';
       
-      // Extraer el candidato
-      const candidate = targetColumn.includes('Rodrigo') ? 'Rodrigo' : 'Jorge';
+      console.log(`🔍 Buscando columna para: Candidato="${candidate}", Atributo="${attribute}"`);
       
-      // Buscar columnas que contengan tanto el candidato como el atributo
+      // Buscar columnas que contengan ambos componentes
       const matchingColumn = rowColumns.find(col => {
-        const hasCandidate = col.includes(candidate);
-        const hasAttribute = col.includes(attribute);
+        const normalizedCol = normalizeForComparison(col);
+        const hasCandidate = normalizedCol.includes(candidate.toLowerCase());
+        const hasAttribute = attribute && normalizedCol.includes(attribute.toLowerCase());
+        
+        // Para debugging
+        if (hasCandidate) {
+          console.log(`   - Columna "${col}" contiene candidato`);
+          console.log(`   - Tiene atributo "${attribute}": ${hasAttribute}`);
+        }
+        
         return hasCandidate && hasAttribute;
       });
       
       if (matchingColumn) {
-        console.log(`Mapeando: "${targetColumn}" → "${matchingColumn}"`);
+        console.log(`✅ Match encontrado: "${targetColumn}" → "${matchingColumn}"`);
+        return matchingColumn;
+      } else {
+        console.log(`❌ No se encontró match para: "${targetColumn}"`);
+        console.log(`   Columnas disponibles con candidato "${candidate}":`, 
+          rowColumns.filter(col => normalizeForComparison(col).includes(candidate.toLowerCase()))
+        );
+      }
+    }
+    
+    // 5. Para columnas de Relevancia
+    if (targetColumn.includes('Relevancia de los temas')) {
+      const attributeMatch = targetColumn.match(/\[([^\]]+)\]/);
+      const attribute = attributeMatch ? attributeMatch[1].trim() : '';
+      
+      const matchingColumn = rowColumns.find(col => {
+        const normalizedCol = normalizeForComparison(col);
+        return normalizedCol.includes('relevancia') && normalizedCol.includes(attribute.toLowerCase());
+      });
+      
+      if (matchingColumn) {
+        console.log(`✅ Columna de Relevancia encontrada: "${targetColumn}" → "${matchingColumn}"`);
         return matchingColumn;
       }
     }
     
+    // 6. Para Localidad
+    if (targetColumn.includes('Localidad/Provincia de origen')) {
+      const matchingColumn = rowColumns.find(col => 
+        normalizeForComparison(col).includes('localidad') || 
+        normalizeForComparison(col).includes('provincia de origen')
+      );
+      
+      if (matchingColumn) {
+        console.log(`✅ Columna de Localidad encontrada: "${targetColumn}" → "${matchingColumn}"`);
+        return matchingColumn;
+      }
+    }
+    
+    console.log(`❌❌❌ NO SE ENCONTRÓ NINGÚN MATCH PARA: "${targetColumn}"`);
+    console.log(`   Columnas disponibles:`, rowColumns);
+    
     return null;
   };
-
   const downloadJSON = () => {
     if (allSurveyData.length === 0) {
       setMessage('No hay datos para descargar.');
