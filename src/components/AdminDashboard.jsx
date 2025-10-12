@@ -183,122 +183,6 @@ const AdminDashboard = () => {
     }
   };
 
-  const importFromExcel = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    setLoading(true);
-    setMessage('Importando datos...');
-
-    try {
-      const reader = new FileReader();
-
-      reader.onload = async (event) => {
-        try {
-          const data = new Uint8Array(event.target.result);
-          const workbook = XLSX.read(data, { type: 'array' });
-          const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-          
-          // Leer con el orden de las columnas
-          const jsonData = XLSX.utils.sheet_to_json(firstSheet, {
-            raw: false, // Mantener formato de texto
-            defval: '' // Valor por defecto para celdas vacías
-          });
-
-          // DEBUG: Ver qué columnas vienen del Excel
-          if (jsonData.length > 0) {
-            console.log('=== COLUMNAS DEL EXCEL ===');
-            Object.keys(jsonData[0]).forEach(col => {
-              if (col.includes('Rodrigo') || col.includes('Quiroga')) {
-                console.log('Columna encontrada:', col);
-              }
-            });
-          }
-
-          let imported = 0;
-          let errors = 0;
-
-          for (const row of jsonData) {
-            try {
-              // Validar que tenga datos mínimos
-              if (row['¿Qué edad tienes?'] && row['Genero:']) {
-                // *** CAMBIO CRÍTICO: Mapeo inteligente de columnas ***
-                const orderedRow = {};
-                
-                COLUMN_ORDER.forEach(column => {
-                  // Buscar la columna exacta primero
-                  if (row[column] !== undefined) {
-                    orderedRow[column] = row[column];
-                  } else {
-                    // Si no encuentra exacto, buscar columnas similares para atributos de candidatos
-                    const matchingColumn = findMatchingCandidateColumn(row, column);
-                    orderedRow[column] = matchingColumn ? row[matchingColumn] : '';
-                  }
-                });
-                
-                await addDoc(collection(db, 'encuestas'), orderedRow);
-                imported++;
-              } else {
-                errors++;
-                console.log('Fila sin datos mínimos:', row);
-              }
-            } catch (err) {
-              console.error('Error en fila:', err, row);
-              errors++;
-            }
-          }
-
-          setMessage(` ${imported} respuestas importadas correctamente${errors > 0 ? `. ${errors} filas con errores.` : '.'}`);
-          await loadStats();
-
-          setTimeout(() => setMessage(''), 5000);
-
-        } catch (error) {
-          console.error('Error al procesar el archivo:', error);
-          setMessage('ERROR al procesar el archivo Excel. Verifica el formato.');
-        }
-      };
-
-      reader.readAsArrayBuffer(file);
-
-    } catch (error) {
-      console.error('Error al importar:', error);
-      setMessage('ERROR al importar los datos.');
-    } finally {
-      setLoading(false);
-      e.target.value = '';
-    }
-  };
-
-  // *** NUEVA FUNCIÓN AUXILIAR: Encontrar columnas de candidatos que coincidan ***
-  const findMatchingCandidateColumn = (row, targetColumn) => {
-    const rowColumns = Object.keys(row);
-    
-    // Si es una columna de atributos de candidatos
-    if (targetColumn.includes('Rodrigo Paz Pereira') || targetColumn.includes('Jorge Quiroga Ramírez')) {
-      // Extraer el atributo específico (lo que está entre corchetes)
-      const attributeMatch = targetColumn.match(/\[([^\]]+)\]/);
-      const attribute = attributeMatch ? attributeMatch[1].trim() : '';
-      
-      // Extraer el candidato
-      const candidate = targetColumn.includes('Rodrigo') ? 'Rodrigo' : 'Jorge';
-      
-      // Buscar columnas que contengan tanto el candidato como el atributo
-      const matchingColumn = rowColumns.find(col => {
-        const hasCandidate = col.includes(candidate);
-        const hasAttribute = col.includes(attribute);
-        return hasCandidate && hasAttribute;
-      });
-      
-      if (matchingColumn) {
-        console.log(`Mapeando: "${targetColumn}" → "${matchingColumn}"`);
-        return matchingColumn;
-      }
-    }
-    
-    return null;
-  };
-
   const downloadJSON = () => {
     if (allSurveyData.length === 0) {
       setMessage('No hay datos para descargar.');
@@ -424,22 +308,11 @@ const AdminDashboard = () => {
         </div>
 
         <div className="flex flex-wrap gap-3">
-          <label className="flex items-center gap-2 px-5 py-3 bg-blue-600 text-white rounded-lg cursor-pointer hover:bg-blue-700 transition shadow-md font-semibold">
-            <FileUp size={20} />
-            <span>Importar Excel</span>
-            <input
-              type="file"
-              accept=".xlsx,.xls"
-              onChange={importFromExcel}
-              disabled={loading}
-              className="hidden"
-            />
-          </label>
 
           <button
             onClick={exportToExcel}
             disabled={loading || allSurveyData.length === 0}
-            className="flex items-center gap-2 px-5 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition disabled:opacity-50 shadow-md font-semibold"
+            className="flex items-center gap-2 px-5 py-3 bg-pink-500 text-white rounded-lg hover:bg-pink-600 transition disabled:opacity-50 shadow-md font-semibold"
           >
             <FileDown size={20} />
             Exportar Excel
