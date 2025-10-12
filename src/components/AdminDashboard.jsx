@@ -11,7 +11,9 @@ const AdminDashboard = () => {
     porEdad: {},
     porGenero: {},
     porCandidato: {},
-    porDepartamento: {}
+    porDepartamento: {},
+    porSituacionEducativa: {},
+    porEstatusLaboral: {} 
   });
   const [allSurveyData, setAllSurveyData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -94,6 +96,8 @@ const AdminDashboard = () => {
       const porGenero = {};
       const porCandidato = {};
       const porDepartamento = {};
+      const porSituacionEducativa = {}; 
+      const porEstatusLaboral = {}; 
 
       data.forEach(item => {
         const edad = item['¿Qué edad tienes?'] || 'No especificado';
@@ -107,6 +111,12 @@ const AdminDashboard = () => {
 
         const depto = item['Ciudad/Departamento de residencia:'] || 'No especificado';
         porDepartamento[depto] = (porDepartamento[depto] || 0) + 1;
+
+        const situacionEducativa = item['Situación Educativa:'] || 'No especificado';
+        porSituacionEducativa[situacionEducativa] = (porSituacionEducativa[situacionEducativa] || 0) + 1;
+
+        const estatusLaboral = item['Estatus Laboral (Recién profesionalizados - Profesionales Junior)'] || 'No especificado';
+        porEstatusLaboral[estatusLaboral] = (porEstatusLaboral[estatusLaboral] || 0) + 1;
       });
 
       setStats({
@@ -114,12 +124,14 @@ const AdminDashboard = () => {
         porEdad,
         porGenero,
         porCandidato,
-        porDepartamento
+        porDepartamento,
+        porSituacionEducativa, 
+        porEstatusLaboral  
       });
 
     } catch (error) {
       console.error('Error al cargar estadísticas:', error);
-      setMessage('❌ Error al cargar los datos.');
+      setMessage('ERROR al cargar los datos.');
     } finally {
       setLoading(false);
     }
@@ -127,11 +139,11 @@ const AdminDashboard = () => {
 
   const exportToExcel = async () => {
     setLoading(true);
-    setMessage('📊 Exportando datos...');
+    setMessage('Exportando datos...');
 
     try {
       if (allSurveyData.length === 0) {
-        setMessage('⚠️ No hay datos para exportar.');
+        setMessage('No hay datos para exportar.');
         setLoading(false);
         return;
       }
@@ -160,12 +172,12 @@ const AdminDashboard = () => {
       const fileName = `encuestas_bolivia_2025_${new Date().toISOString().split('T')[0]}.xlsx`;
       XLSX.writeFile(workbook, fileName);
 
-      setMessage(`✅ ${allSurveyData.length} respuestas exportadas correctamente.`);
+      setMessage(` ${allSurveyData.length} respuestas exportadas correctamente.`);
       setTimeout(() => setMessage(''), 3000);
 
     } catch (error) {
       console.error('Error al exportar:', error);
-      setMessage('❌ Error al exportar los datos.');
+      setMessage('Error al exportar los datos.');
     } finally {
       setLoading(false);
     }
@@ -176,7 +188,7 @@ const AdminDashboard = () => {
     if (!file) return;
 
     setLoading(true);
-    setMessage('📥 Importando datos...');
+    setMessage('Importando datos...');
 
     try {
       const reader = new FileReader();
@@ -236,14 +248,14 @@ const AdminDashboard = () => {
             }
           }
 
-          setMessage(`✅ ${imported} respuestas importadas correctamente${errors > 0 ? `. ${errors} filas con errores.` : '.'}`);
+          setMessage(` ${imported} respuestas importadas correctamente${errors > 0 ? `. ${errors} filas con errores.` : '.'}`);
           await loadStats();
 
           setTimeout(() => setMessage(''), 5000);
 
         } catch (error) {
           console.error('Error al procesar el archivo:', error);
-          setMessage('❌ Error al procesar el archivo Excel. Verifica el formato.');
+          setMessage('ERROR al procesar el archivo Excel. Verifica el formato.');
         }
       };
 
@@ -251,7 +263,7 @@ const AdminDashboard = () => {
 
     } catch (error) {
       console.error('Error al importar:', error);
-      setMessage('❌ Error al importar los datos.');
+      setMessage('ERROR al importar los datos.');
     } finally {
       setLoading(false);
       e.target.value = '';
@@ -289,7 +301,7 @@ const AdminDashboard = () => {
 
   const downloadJSON = () => {
     if (allSurveyData.length === 0) {
-      setMessage('⚠️ No hay datos para descargar.');
+      setMessage('No hay datos para descargar.');
       return;
     }
 
@@ -314,7 +326,7 @@ const AdminDashboard = () => {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 
-    setMessage('✅ Archivo JSON descargado correctamente.');
+    setMessage('Archivo JSON descargado correctamente.');
     setTimeout(() => setMessage(''), 3000);
   };
 
@@ -366,9 +378,6 @@ const AdminDashboard = () => {
                       backgroundColor: barColor
                     }}
                   >
-                    {parseFloat(percentage) > 10 && (
-                      <span className="text-xs font-bold text-white px-2">{percentage}%</span>
-                    )}
                   </div>
                 </div>
               </div>
@@ -481,8 +490,14 @@ const AdminDashboard = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {renderBarChart('Distribución por Género', stats.porGenero)}
         {renderBarChart('Distribución por Departamento', stats.porDepartamento)}
+        {renderBarChart('Distribución por Estatus Laboral', stats.porEstatusLaboral)}
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {renderBarChart('Distribución por Género', stats.porGenero)}
+        {renderBarChart('Distribución por Situación Educativa', stats.porSituacionEducativa)}
+
       </div>
     </div>
   );
