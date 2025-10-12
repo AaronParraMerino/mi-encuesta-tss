@@ -439,7 +439,7 @@ const AdminDashboard = () => {
           <button
             onClick={exportToExcel}
             disabled={loading || allSurveyData.length === 0}
-            className="flex items-center gap-2 px-5 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition disabled:opacity-50 shadow-md font-semibold"
+            className="flex items-center gap-2 px-5 py-3 bg-pink-500 text-white rounded-lg hover:bg-pink-600 transition disabled:opacity-50 shadow-md font-semibold"
           >
             <FileDown size={20} />
             Exportar Excel
