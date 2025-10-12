@@ -400,7 +400,7 @@ const SurveyForm = () => {
             1. Datos Demográficos y Socioeconómicos
           </h2>
           
-          {renderSelect('¿Qué edad tienes?', '¿Qué edad tienes?', ['18 a 24', '25 a 30', '30 a 45', '46 en adelante'])}
+          {renderSelect('¿Qué edad tienes?', '¿Qué edad tienes?', ['18 a 24', '25 a 30', '31 a 45', '46 en adelante'])}
           
           {renderSelect('Genero:', 'Género', ['Masculino', 'Femenino', 'Prefiero no decirlo', 'No Binario'])}
           
