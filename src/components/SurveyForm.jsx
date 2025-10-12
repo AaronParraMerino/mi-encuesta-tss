@@ -35,17 +35,17 @@ const SurveyForm = () => {
     'Relevancia de los temas en su elección\n(1 = Nada Importante) a (5 = Muy Importante) [Migración laboral juvenil]': '',
     'Relevancia de los temas en su elección\n(1 = Nada Importante) a (5 = Muy Importante) [Propuestas de innovación y tecnología]': '',
     // Atributos Paz Pereira - Cada atributo en su propia columna
-    '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a (5 = Totalmente) [Experiencia en gestión ]': '',
-    '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a (5 = Totalmente) [Honestidad/Transparencia]': '',
-    '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a (5 = Totalmente) [Capacidad de unir a la población]': '',
-    '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a (5 = Totalmente) [Liderazgo fuerte/Decisivo]': '',
-    '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a (5 = Totalmente) [Propuestas claras y realistas]': '',
+    '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a  (5 = Totalmente) [Experiencia en gestión ]': '',
+    '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a  (5 = Totalmente) [Honestidad/Transparencia]': '',
+    '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a  (5 = Totalmente) [Capacidad de unir a la población]': '',
+    '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a  (5 = Totalmente) [Liderazgo fuerte/Decisivo]': '',
+    '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a  (5 = Totalmente) [Propuestas claras y realistas]': '',
     // Atributos Quiroga - Cada atributo en su propia columna
-    '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a (5 = Totalmente) [Experiencia en gestión ]': '',
-    '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a (5 = Totalmente) [Honestidad/Transparencia]': '',
-    '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a (5 = Totalmente) [Capacidad de unir a la población]': '',
-    '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a (5 = Totalmente) [Liderazgo fuerte/Decisivo]': '',
-    '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a (5 = Totalmente) [Propuestas claras y realistas]': '',
+    '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a  (5 = Totalmente) [Experiencia en gestión ]': '',
+    '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a  (5 = Totalmente) [Honestidad/Transparencia]': '',
+    '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a  (5 = Totalmente) [Capacidad de unir a la población]': '',
+    '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a  (5 = Totalmente) [Liderazgo fuerte/Decisivo]': '',
+    '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a  (5 = Totalmente) [Propuestas claras y realistas]': '',
     // Fuentes de información
     '¿Cuáles son las redes sociales por el cual recibe información de política?': '',
     '¿Cuáles son los medios comunicación por el cual recibe información de política?': '',
@@ -123,22 +123,23 @@ const SurveyForm = () => {
         'Relevancia de los temas en su elección\n(1 = Nada Importante) a (5 = Muy Importante) [Modelo de Desarrollo del País: Estatismo vs. Mercado]',
         'Relevancia de los temas en su elección\n(1 = Nada Importante) a (5 = Muy Importante) [Migración laboral juvenil]',
         'Relevancia de los temas en su elección\n(1 = Nada Importante) a (5 = Muy Importante) [Propuestas de innovación y tecnología]',
-        '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a (5 = Totalmente) [Experiencia en gestión ]',
-        '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a (5 = Totalmente) [Honestidad/Transparencia]',
-        '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a (5 = Totalmente) [Capacidad de unir a la población]',
-        '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a (5 = Totalmente) [Liderazgo fuerte/Decisivo]',
-        '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a (5 = Totalmente) [Propuestas claras y realistas]',
-        '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a (5 = Totalmente) [Experiencia en gestión ]',
-        '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a (5 = Totalmente) [Honestidad/Transparencia]',
-        '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a (5 = Totalmente) [Capacidad de unir a la población]',
-        '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a (5 = Totalmente) [Liderazgo fuerte/Decisivo]',
-        '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a (5 = Totalmente) [Propuestas claras y realistas]',
+        '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a  (5 = Totalmente) [Experiencia en gestión ]',
+        '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a  (5 = Totalmente) [Honestidad/Transparencia]',
+        '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a  (5 = Totalmente) [Capacidad de unir a la población]',
+        '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a  (5 = Totalmente) [Liderazgo fuerte/Decisivo]',
+        '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a  (5 = Totalmente) [Propuestas claras y realistas]',
+        '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a  (5 = Totalmente) [Experiencia en gestión ]',
+        '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a  (5 = Totalmente) [Honestidad/Transparencia]',
+        '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a  (5 = Totalmente) [Capacidad de unir a la población]',
+        '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a  (5 = Totalmente) [Liderazgo fuerte/Decisivo]',
+        '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a  (5 = Totalmente) [Propuestas claras y realistas]',
         '¿Cuáles son las redes sociales por el cual recibe información de política?',
         '¿Cuáles son los medios comunicación por el cual recibe información de política?',
         '¿Cuáles son los medios de vinculo social por el cual recibe información de política?',
         '¿Con qué frecuencia interactúa con contenidos políticos en redes sociales?',
         '¿A quién considera más influyente en su decisión política?',
         'Nivel de confianza en encuestas publicadas en medios digitales',
+        'Percepción de estabilidad política futura tras la segunda vuelta',
         'Expectativa personal sobre mejora del País si GANA Rodrigo Paz Pereira',
         'Expectativa personal sobre mejora del País si GANA Jorge Quiroga Ramírez',
         'Dirección de correo electrónico'
@@ -399,7 +400,7 @@ const SurveyForm = () => {
             1. Datos Demográficos y Socioeconómicos
           </h2>
           
-          {renderRadioGroup('¿Qué edad tienes?', '¿Qué edad tienes?', ['18 a 24', '25 a 30', '30 a 45', '46 en adelante'])}
+          {renderSelect('¿Qué edad tienes?', '¿Qué edad tienes?', ['18 a 24', '25 a 30', '30 a 45', '46 en adelante'])}
           
           {renderSelect('Genero:', 'Género', ['Masculino', 'Femenino', 'Prefiero no decirlo', 'No Binario'])}
           
@@ -503,11 +504,11 @@ const SurveyForm = () => {
           </p>
 
           {renderMatrixQuestion([
-            { name: '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a (5 = Totalmente) [Experiencia en gestión ]', shortLabel: 'Experiencia en gestión' },
-            { name: '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a (5 = Totalmente) [Honestidad/Transparencia]', shortLabel: 'Honestidad/Transparencia' },
-            { name: '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a (5 = Totalmente) [Capacidad de unir a la población]', shortLabel: 'Capacidad de unir a la población' },
-            { name: '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a (5 = Totalmente) [Liderazgo fuerte/Decisivo]', shortLabel: 'Liderazgo fuerte/Decisivo' },
-            { name: '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a (5 = Totalmente) [Propuestas claras y realistas]', shortLabel: 'Propuestas claras y realistas' }
+            { name: '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a  (5 = Totalmente) [Experiencia en gestión ]', shortLabel: 'Experiencia en gestión' },
+            { name: '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a  (5 = Totalmente) [Honestidad/Transparencia]', shortLabel: 'Honestidad/Transparencia' },
+            { name: '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a  (5 = Totalmente) [Capacidad de unir a la población]', shortLabel: 'Capacidad de unir a la población' },
+            { name: '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a  (5 = Totalmente) [Liderazgo fuerte/Decisivo]', shortLabel: 'Liderazgo fuerte/Decisivo' },
+            { name: '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a  (5 = Totalmente) [Propuestas claras y realistas]', shortLabel: 'Propuestas claras y realistas' }
           ], 'Atributos de Rodrigo Paz Pereira')}
 
           <p className="text-secondary mb-4 mt-4">
@@ -515,11 +516,11 @@ const SurveyForm = () => {
           </p>
 
           {renderMatrixQuestion([
-            { name: '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a (5 = Totalmente) [Experiencia en gestión ]', shortLabel: 'Experiencia en gestión' },
-            { name: '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a (5 = Totalmente) [Honestidad/Transparencia]', shortLabel: 'Honestidad/Transparencia' },
-            { name: '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a (5 = Totalmente) [Capacidad de unir a la población]', shortLabel: 'Capacidad de unir a la población' },
-            { name: '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a (5 = Totalmente) [Liderazgo fuerte/Decisivo]', shortLabel: 'Liderazgo fuerte/Decisivo' },
-            { name: '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a (5 = Totalmente) [Propuestas claras y realistas]', shortLabel: 'Propuestas claras y realistas' }
+            { name: '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a  (5 = Totalmente) [Experiencia en gestión ]', shortLabel: 'Experiencia en gestión' },
+            { name: '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a  (5 = Totalmente) [Honestidad/Transparencia]', shortLabel: 'Honestidad/Transparencia' },
+            { name: '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a  (5 = Totalmente) [Capacidad de unir a la población]', shortLabel: 'Capacidad de unir a la población' },
+            { name: '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a  (5 = Totalmente) [Liderazgo fuerte/Decisivo]', shortLabel: 'Liderazgo fuerte/Decisivo' },
+            { name: '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a  (5 = Totalmente) [Propuestas claras y realistas]', shortLabel: 'Propuestas claras y realistas' }
           ], 'Atributos de Jorge Quiroga Ramírez')}
         </div>
 

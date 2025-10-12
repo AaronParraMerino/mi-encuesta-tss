@@ -46,16 +46,16 @@ const AdminDashboard = () => {
     'Relevancia de los temas en su elección\n(1 = Nada Importante) a (5 = Muy Importante) [Modelo de Desarrollo del País: Estatismo vs. Mercado]',
     'Relevancia de los temas en su elección\n(1 = Nada Importante) a (5 = Muy Importante) [Migración laboral juvenil]',
     'Relevancia de los temas en su elección\n(1 = Nada Importante) a (5 = Muy Importante) [Propuestas de innovación y tecnología]',
-    '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a (5 = Totalmente) [Experiencia en gestión ]',
-    '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a (5 = Totalmente) [Honestidad/Transparencia]',
-    '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a (5 = Totalmente) [Capacidad de unir a la población]',
-    '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a (5 = Totalmente) [Liderazgo fuerte/Decisivo]',
-    '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a (5 = Totalmente) [Propuestas claras y realistas]',
-    '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a (5 = Totalmente) [Experiencia en gestión ]',
-    '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a (5 = Totalmente) [Honestidad/Transparencia]',
-    '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a (5 = Totalmente) [Capacidad de unir a la población]',
-    '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a (5 = Totalmente) [Liderazgo fuerte/Decisivo]',
-    '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a (5 = Totalmente) [Propuestas claras y realistas]',
+    '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a  (5 = Totalmente) [Experiencia en gestión ]',
+    '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a  (5 = Totalmente) [Honestidad/Transparencia]',
+    '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a  (5 = Totalmente) [Capacidad de unir a la población]',
+    '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a  (5 = Totalmente) [Liderazgo fuerte/Decisivo]',
+    '¿En qué medida describe el siguiente atributo de Rodrigo Paz Pereira?\n(1 = Nada en absoluto) a  (5 = Totalmente) [Propuestas claras y realistas]',
+    '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a  (5 = Totalmente) [Experiencia en gestión ]',
+    '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a  (5 = Totalmente) [Honestidad/Transparencia]',
+    '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a  (5 = Totalmente) [Capacidad de unir a la población]',
+    '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a  (5 = Totalmente) [Liderazgo fuerte/Decisivo]',
+    '¿En qué medida describe el siguiente atributo de Jorge Quiroga Ramírez?\n(1 = Nada en absoluto) a  (5 = Totalmente) [Propuestas claras y realistas]',
     '¿Cuáles son las redes sociales por el cual recibe información de política?',
     '¿Cuáles son los medios comunicación por el cual recibe información de política?',
     '¿Cuáles son los medios de vinculo social por el cual recibe información de política?',
@@ -193,6 +193,16 @@ const AdminDashboard = () => {
             defval: '' // Valor por defecto para celdas vacías
           });
 
+          // DEBUG: Ver qué columnas vienen del Excel
+          if (jsonData.length > 0) {
+            console.log('=== COLUMNAS DEL EXCEL ===');
+            Object.keys(jsonData[0]).forEach(col => {
+              if (col.includes('Rodrigo') || col.includes('Quiroga')) {
+                console.log('Columna encontrada:', col);
+              }
+            });
+          }
+
           let imported = 0;
           let errors = 0;
 
@@ -200,19 +210,28 @@ const AdminDashboard = () => {
             try {
               // Validar que tenga datos mínimos
               if (row['¿Qué edad tienes?'] && row['Genero:']) {
-                // Asegurar que todas las columnas existan en el orden correcto
+                // *** CAMBIO CRÍTICO: Mapeo inteligente de columnas ***
                 const orderedRow = {};
+                
                 COLUMN_ORDER.forEach(column => {
-                  orderedRow[column] = row[column] !== undefined ? row[column] : '';
+                  // Buscar la columna exacta primero
+                  if (row[column] !== undefined) {
+                    orderedRow[column] = row[column];
+                  } else {
+                    // Si no encuentra exacto, buscar columnas similares para atributos de candidatos
+                    const matchingColumn = findMatchingCandidateColumn(row, column);
+                    orderedRow[column] = matchingColumn ? row[matchingColumn] : '';
+                  }
                 });
                 
                 await addDoc(collection(db, 'encuestas'), orderedRow);
                 imported++;
               } else {
                 errors++;
+                console.log('Fila sin datos mínimos:', row);
               }
             } catch (err) {
-              console.error('Error en fila:', err);
+              console.error('Error en fila:', err, row);
               errors++;
             }
           }
@@ -237,6 +256,35 @@ const AdminDashboard = () => {
       setLoading(false);
       e.target.value = '';
     }
+  };
+
+  // *** NUEVA FUNCIÓN AUXILIAR: Encontrar columnas de candidatos que coincidan ***
+  const findMatchingCandidateColumn = (row, targetColumn) => {
+    const rowColumns = Object.keys(row);
+    
+    // Si es una columna de atributos de candidatos
+    if (targetColumn.includes('Rodrigo Paz Pereira') || targetColumn.includes('Jorge Quiroga Ramírez')) {
+      // Extraer el atributo específico (lo que está entre corchetes)
+      const attributeMatch = targetColumn.match(/\[([^\]]+)\]/);
+      const attribute = attributeMatch ? attributeMatch[1].trim() : '';
+      
+      // Extraer el candidato
+      const candidate = targetColumn.includes('Rodrigo') ? 'Rodrigo' : 'Jorge';
+      
+      // Buscar columnas que contengan tanto el candidato como el atributo
+      const matchingColumn = rowColumns.find(col => {
+        const hasCandidate = col.includes(candidate);
+        const hasAttribute = col.includes(attribute);
+        return hasCandidate && hasAttribute;
+      });
+      
+      if (matchingColumn) {
+        console.log(`Mapeando: "${targetColumn}" → "${matchingColumn}"`);
+        return matchingColumn;
+      }
+    }
+    
+    return null;
   };
 
   const downloadJSON = () => {
