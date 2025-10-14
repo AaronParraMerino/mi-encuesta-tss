@@ -13,7 +13,9 @@ const AdminDashboard = () => {
     porCandidato: {},
     porDepartamento: {},
     porSituacionEducativa: {},
-    porEstatusLaboral: {} 
+    porEstatusLaboral: {},
+    porDebate: {},
+    porContenidoRedes: {}
   });
   const [allSurveyData, setAllSurveyData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -64,6 +66,7 @@ const AdminDashboard = () => {
     '¿Con qué frecuencia interactúa con contenidos políticos en redes sociales?',
     '¿A quién considera más influyente en su decisión política?',
     'Nivel de confianza en encuestas publicadas en medios digitales',
+    '¿Cree que los debates podrían hacerle reconsiderar su actual preferencia de voto?',
     'Percepción de estabilidad política futura tras la segunda vuelta',
     'Expectativa personal sobre mejora del País si GANA Rodrigo Paz Pereira',
     'Expectativa personal sobre mejora del País si GANA Jorge Quiroga Ramírez',
@@ -98,6 +101,8 @@ const AdminDashboard = () => {
       const porDepartamento = {};
       const porSituacionEducativa = {}; 
       const porEstatusLaboral = {}; 
+      const porDebate = {}; 
+      const porContenidoRedes = {}; 
 
       data.forEach(item => {
         const edad = item['¿Qué edad tienes?'] || 'No especificado';
@@ -117,6 +122,12 @@ const AdminDashboard = () => {
 
         const estatusLaboral = item['Estatus Laboral (Recién profesionalizados - Profesionales Junior)'] || 'No especificado';
         porEstatusLaboral[estatusLaboral] = (porEstatusLaboral[estatusLaboral] || 0) + 1;
+
+        const debate = item['¿Cree que los debates podrían hacerle reconsiderar su actual preferencia de voto?'] || 'No especificado';
+        porDebate[debate] = (porDebate[debate] || 0) + 1;
+
+        const contenidoRedes = item['¿Con qué frecuencia interactúa con contenidos políticos en redes sociales?'] || 'No especificado'; 
+        porContenidoRedes[contenidoRedes] = (porContenidoRedes[contenidoRedes] || 0) + 1;
       });
 
       setStats({
@@ -126,7 +137,9 @@ const AdminDashboard = () => {
         porCandidato,
         porDepartamento,
         porSituacionEducativa, 
-        porEstatusLaboral  
+        porEstatusLaboral,
+        porDebate,
+        porContenidoRedes
       });
 
     } catch (error) {
@@ -582,6 +595,11 @@ const AdminDashboard = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {renderBarChart('Distribución por Género', stats.porGenero)}
+        {renderBarChart('Distribución por Contenido en Redes Sociales', stats.porContenidoRedes)}
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {renderBarChart('Distribución por Debate', stats.porDebate)}
         {renderBarChart('Distribución por Situación Educativa', stats.porSituacionEducativa)}
 
       </div>
