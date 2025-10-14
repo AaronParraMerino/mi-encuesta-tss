@@ -402,7 +402,7 @@ const SurveyForm = () => {
             1. Datos Demográficos y Socioeconómicos
           </h2>
           
-          {renderSelect('¿Qué edad tienes?', '¿Qué edad tienes?', ['18 a 24', '25 a 30', '31 a 45', '46 en adelante'])}
+          {renderSelect('¿Qué edad tienes?', '¿Qué edad tienes?', ['18 a 24', '25 en adelante'])}
           
           {renderSelect('Genero:', 'Género', ['Masculino', 'Femenino', 'Prefiero no decirlo', 'No Binario'])}
           
@@ -420,14 +420,13 @@ const SurveyForm = () => {
             'Estudiante Universitario', 'Recién Profesionalizado'
           ])}
 
-          {renderTextInput('¿Menciona la carrera que estudias o estudiaste?', '¿Menciona la carrera que estudias o estudiaste?', 'Ej: Ingeniería de Sistemas')}
+          {renderTextInput('¿Menciona la carrera que estudias o estudiaste?', 'Menciona la carrera que estudias o estudiaste', 'Ej: Ingeniería de Sistemas')}
           
           {renderSelect('Estrato Socioeconómico Percibido:', 'Estrato Socioeconómico Percibido', [
             'Bajo (Luchando para cubrir necesidades básicas)',
             'Medio-Bajo (Cubriendo necesidades, pocos ahorros)',
             'Medio (Vida cómoda, capacidad de ahorro)',
-            'Medio-Alto (Ingresos significativos, estabilidad)',
-            'Alto (Ingresos altos)'
+            'Medio-Alto (Ingresos significativos, estabilidad)'
           ])}
           
           {renderSelect('Estatus Laboral (Recién profesionalizados - Profesionales Junior)', 'Estatus Laboral', [
@@ -440,7 +439,7 @@ const SurveyForm = () => {
           ])}
           
           {renderSelect('Ha votado en elecciones presidenciales previas:', 'Ha votado en elecciones presidenciales previas', [
-            'Si', 'No', 'No recuerdo'
+            'Si', 'No'
           ])}
         </div>
 
