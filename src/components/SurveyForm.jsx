@@ -53,6 +53,7 @@ const SurveyForm = () => {
     '¿Con qué frecuencia interactúa con contenidos políticos en redes sociales?': '',
     '¿A quién considera más influyente en su decisión política?': '',
     'Nivel de confianza en encuestas publicadas en medios digitales': '',
+    '¿Cree que los debates podrían hacerle reconsiderar su actual preferencia de voto?': '',
     'Percepción de estabilidad política futura tras la segunda vuelta': '',
     'Expectativa personal sobre mejora del País si GANA Rodrigo Paz Pereira': '',
     'Expectativa personal sobre mejora del País si GANA Jorge Quiroga Ramírez': '',
@@ -139,6 +140,7 @@ const SurveyForm = () => {
         '¿Con qué frecuencia interactúa con contenidos políticos en redes sociales?',
         '¿A quién considera más influyente en su decisión política?',
         'Nivel de confianza en encuestas publicadas en medios digitales',
+        '¿Cree que los debates podrían hacerle reconsiderar su actual preferencia de voto?',
         'Percepción de estabilidad política futura tras la segunda vuelta',
         'Expectativa personal sobre mejora del País si GANA Rodrigo Paz Pereira',
         'Expectativa personal sobre mejora del País si GANA Jorge Quiroga Ramírez',
@@ -551,6 +553,8 @@ const SurveyForm = () => {
           ])}
 
           {renderScale('Nivel de confianza en encuestas publicadas en medios digitales', 'Nivel de confianza en encuestas publicadas en medios digitales', '1 = Muy baja', '5 = Muy alta')}
+
+          {renderSelect('¿Cree que los debates podrían hacerle reconsiderar su actual preferencia de voto?', '¿Cree que los debates podrían hacerle reconsiderar su actual preferencia de voto?', ['Si', 'No'])}
         </div>
 
         {/* SECCIÓN 6: Expectativas */}
