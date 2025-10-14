@@ -585,17 +585,17 @@ const AdminDashboard = () => {
       {/* Gráficos */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {renderBarChart('Distribución de Votos por Candidato', stats.porCandidato)}
-        {renderBarChart('Distribución por Rango de Edad', stats.porEdad)}
+        {renderBarChart('Distribución por Departamento', stats.porDepartamento)}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {renderBarChart('Distribución por Departamento', stats.porDepartamento)}
+        {renderBarChart('Distribución por Contenido en Redes Sociales', stats.porContenidoRedes)}
         {renderBarChart('Distribución por Estatus Laboral', stats.porEstatusLaboral)}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {renderBarChart('Distribución por Género', stats.porGenero)}
-        {renderBarChart('Distribución por Contenido en Redes Sociales', stats.porContenidoRedes)}
+        {renderBarChart('Distribución por Rango de Edad', stats.porEdad)}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
