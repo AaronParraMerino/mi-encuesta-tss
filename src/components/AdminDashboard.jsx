@@ -599,7 +599,7 @@ const AdminDashboard = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {renderBarChart('Distribución por Debate', stats.porDebate)}
+        {renderBarChart('Distribución por Cambio de voto por el Debate', stats.porDebate)}
         {renderBarChart('Distribución por Situación Educativa', stats.porSituacionEducativa)}
 
       </div>
