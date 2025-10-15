@@ -531,15 +531,15 @@ const SurveyForm = () => {
             5. Fuentes de Información Política
           </h2>
           
-          {renderCheckboxGroup('¿Cuáles son las redes sociales por el cual recibe información de política?', '¿Cuáles son las redes sociales por el cual recibe información de política?', 
+          {renderSelect('¿Cuáles son las redes sociales por el cual recibe información de política?', '¿Cuáles son las redes sociales por el cual recibe información de política?', 
             ['TikTok', 'Facebook', 'Instagram', 'Twitter (X)', 'Reddit']
           )}
 
-          {renderCheckboxGroup('¿Cuáles son los medios comunicación por el cual recibe información de política?', '¿Cuáles son los medios de comunicación por el cual recibe información de política?',
+          {renderSelect('¿Cuáles son los medios comunicación por el cual recibe información de política?', '¿Cuáles son los medios de comunicación por el cual recibe información de política?',
             ['Televisión', 'Radio', 'Periódico', 'Prensa en linea']
           )}
 
-          {renderCheckboxGroup('¿Cuáles son los medios de vinculo social por el cual recibe información de política?', '¿Cuáles son los medios de vínculo social por el cual recibe información de política?',
+          {renderSelect('¿Cuáles son los medios de vinculo social por el cual recibe información de política?', '¿Cuáles son los medios de vínculo social por el cual recibe información de política?',
             ['Familiares', 'Amigos', 'Conocidos en el trabajo']
           )}
 
